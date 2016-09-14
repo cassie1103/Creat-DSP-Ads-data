@@ -5,25 +5,29 @@
 import requests
 import json,os
 
-class Test:
+class AdwoTest:
 
-    base_url = "http://xxx"
+    base_url = "http://dsp.adwo.com/AdwoRTBBidder/BidProcesser"
 
     def request_ads(self):
         ''' 请求成功 '''
-        loop = 5
+        loop = 10
         for i in range(0, loop):
             base_dir = str(os.path.dirname(os.path.dirname(__file__)))
             file_path = base_dir + "/config/request_640100_success.json"
             x = open(file_path, 'r')
             y = x.read()
             f = eval(y)
-            z = f.get('id') + str(i)
-            f['id'] = z
+            f['id'] += str(i)
+            f['imp'][0]['id'] += str(i)
+            f['imp'][0]['banner']['id'] += str(i)
+            f['device']['ext']['idfa'] += str(i)
+            f['device']['ext']['udi']['idfa'] += str(i)
+            print(json.dumps(f))
             headers = {'Content-Type': 'application/json'}
             r = requests.post(self.base_url, data=json.dumps(f), headers=headers)
             self.result = r.json()
-            print(self.result)
+
 
 
     def request_nurl(self):
@@ -48,6 +52,6 @@ class Test:
         print(r)
 
 if __name__ == '__main__':
-    Test().request_cm()
+    AdwoTest().request_cm()
 
 
